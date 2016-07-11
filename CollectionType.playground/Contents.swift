@@ -6,8 +6,6 @@ var str = "Hello, playground"
 var x = [1,2,3]
 var y = x
 y.append(4)
-print(x)
-print(y)
 
 let a = NSMutableArray(array: [1,2,3])
 let b: NSArray = a
@@ -38,5 +36,14 @@ extension Array{
             result.append(transform(x))
         }
         return result
+    }
+}
+
+extension Sequence{
+    func findElement(match: T->Bool) -> T? {
+        for element in self where match(element){
+            return element
+        }
+        return nil
     }
 }
