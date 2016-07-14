@@ -117,7 +117,99 @@ extension Array{
 let abc = [1,2,3].map2{fib in fib * fib}
 abc
 
+// flatMap
+extension Array{
+    func flatMap<U>(transform: Element -> [U]) -> [U] {
+        var result: [U] = []
+        for x in self{
+            result.appendContentsOf(transform(x))
+        }
+        return result
+    }
+}
 
+let ranks = ["J","Q","K","A"]
+let allCombinations = ["A","B","C"].flatMap{ suit in
+    ranks.map{rank in
+        (suit, rank)
+    }
+}
+
+allCombinations
+
+// forEach
+for element in [1,2,3]{
+    print(element)
+}
+
+[1,2,3].forEach{element in
+    print(element)
+}
+
+extension Array where Element: Equatable{
+    func indexOf(element: Element) -> Int? {
+        for idx in self.indices where self[idx] == element{
+            return idx
+        }
+        return nil
+    }
+}
+
+// bridge
+var xx = [1,2,3]
+let zz: NSArray = xx
+zz[0] is NSNumber
+
+// dictionary collection
+protocol Setting{
+    func settingsView() -> UIView
+}
+
+extension String: Setting{
+    func settingsView() -> UIView {
+        return UITextField()
+    }
+}
+
+extension Bool: Setting{
+    func settingsView() -> UIView {
+        return UISwitch()
+    }
+}
+
+let defaultSettings: [String: Setting] = [
+    "Airplane Mode": true,
+    "Name": "My iPhone"
+]
+
+var localizedSettings = defaultSettings
+localizedSettings["Name"] = "Mein iPhone"
+localizedSettings["Do Not Disturb"] = true
+let oldName = localizedSettings.updateValue("My iPhone", forKey: "Name")
+localizedSettings["Name"]
+
+extension Dictionary{
+    mutating func merge<S: SequenceType where S.Generator.Element == (Key, Value)>(other: S){
+        for(k,v) in other{
+            self[k] = v
+        }
+    }
+}
+
+extension Dictionary{
+    init<S:SequenceType where S.Generator.Element == (Key, Value)>(_ sequence: S){
+        self = [:]
+        self.merge(sequence)
+    }
+}
+
+extension Dictionary{
+    func mapValues<NewValue>(transform: Value -> NewValue) -> [Key:NewValue] {
+        return Dictionary<Key, NewValue>(map{(key, value) in
+            return (key, transform(value))
+        })
+    }
+}
 
 
 
